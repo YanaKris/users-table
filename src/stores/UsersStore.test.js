@@ -56,10 +56,10 @@ describe('сортировка', () => {
 
   it('setSort по тому же полю циклит asc → desc → none', () => {
     const store = new UsersStore();
-    store.setSort('age'); // asc
-    store.setSort('age'); // desc
+    store.setSort('age');
+    store.setSort('age');
     expect(store.order).toBe('desc');
-    store.setSort('age'); // none
+    store.setSort('age');
     expect(store.sortBy).toBeNull();
     expect(store.order).toBeNull();
   });
@@ -109,8 +109,8 @@ describe('защита от гонки', () => {
     let resolveSlow;
     const slow = new Promise((resolve) => { resolveSlow = resolve; });
     getUsers
-      .mockReturnValueOnce(slow) // первый запрос — «медленный»
-      .mockResolvedValueOnce({ users: [{ id: 2 }], total: 2 }); // второй — быстрый
+      .mockReturnValueOnce(slow)
+      .mockResolvedValueOnce({ users: [{ id: 2 }], total: 2 });
 
     const store = new UsersStore();
 
@@ -122,5 +122,24 @@ describe('защита от гонки', () => {
 
     expect(store.users).toEqual([{ id: 2 }]);
     expect(store.total).toBe(2);
+  });
+
+  it('поздняя ОШИБКА не затирает результат более свежего успешного запроса', async () => {
+    let rejectSlow;
+    const slow = new Promise((_, reject) => { rejectSlow = reject; });
+    getUsers
+      .mockReturnValueOnce(slow)
+      .mockResolvedValueOnce({ users: [{ id: 2 }], total: 2 });
+
+    const store = new UsersStore();
+
+    const firstLoad = store.load();
+    await store.load();
+
+    rejectSlow(new Error('Ошибка сети'));
+    await firstLoad;
+
+    expect(store.users).toEqual([{ id: 2 }]);
+    expect(store.error).toBeNull();
   });
 });

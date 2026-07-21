@@ -39,12 +39,10 @@ describe('App', () => {
     render(<App />);
     await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
 
-    // вторая загрузка (клик по сортировке) «зависает» — ловим промежуточное состояние
     let resolveSecond;
     getUsers.mockReturnValueOnce(new Promise((r) => { resolveSecond = r; }));
     await userEvent.click(screen.getByRole('button', { name: /Фамилия/ }));
 
-    // старые данные видны во время подгрузки, полноэкранного лоадера нет
     expect(screen.getByText('Johnson')).toBeInTheDocument();
     expect(screen.queryByRole('status')).toBeNull();
 
@@ -53,5 +51,20 @@ describe('App', () => {
       total: 1,
     });
     await waitFor(() => expect(getUsers).toHaveBeenCalledTimes(2));
+  });
+
+  it('клик «Повторить» после ошибки перезапрашивает данные', async () => {
+    getUsers.mockRejectedValueOnce(new Error('Ошибка сети'));
+    render(<App />);
+    await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument());
+
+    getUsers.mockResolvedValueOnce({
+      users: [{ id: 1, lastName: 'Johnson', firstName: 'Emily', address: { city: 'Phoenix' } }],
+      total: 1,
+    });
+    await userEvent.click(screen.getByRole('button', { name: 'Повторить' }));
+
+    await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
+    expect(getUsers).toHaveBeenCalledTimes(2);
   });
 });
