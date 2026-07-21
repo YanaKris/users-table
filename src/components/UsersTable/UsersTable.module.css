@@ -5,6 +5,11 @@
   max-height: 70vh;
   overflow: auto;
 }
+.loading {
+  opacity: 0.55;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
 .table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .table th, .table td {
   padding: 10px 12px;

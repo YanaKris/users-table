@@ -16,6 +16,10 @@ export class UsersStore {
     makeAutoObservable(this, { lastRequestId: false });
   }
 
+  get isInitialLoading() {
+    return this.loading && this.users.length === 0;
+  }
+
   async load() {
     const requestId = ++this.lastRequestId;
     this.loading = true;

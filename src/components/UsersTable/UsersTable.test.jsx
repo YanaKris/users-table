@@ -46,4 +46,15 @@ describe('UsersTable', () => {
     await userEvent.click(screen.getByRole('button', { name: /Возраст/ }));
     expect(onSort).toHaveBeenCalledWith('age');
   });
+
+  it('во время загрузки контейнер помечается aria-busy и данные остаются', () => {
+    const { container } = render(<UsersTable users={users} loading />);
+    expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument();
+    expect(screen.getByText('Johnson')).toBeInTheDocument();
+  });
+
+  it('без загрузки контейнер не помечается aria-busy', () => {
+    const { container } = render(<UsersTable users={users} />);
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+  });
 });

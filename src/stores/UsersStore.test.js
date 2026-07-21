@@ -85,6 +85,25 @@ describe('сортировка', () => {
   });
 });
 
+describe('isInitialLoading', () => {
+  it('true при первой загрузке, когда данных ещё нет', () => {
+    const store = new UsersStore();
+    expect(store.isInitialLoading).toBe(true);
+  });
+
+  it('false при пересортировке — загрузка идёт, но данные уже есть', () => {
+    const store = new UsersStore();
+    store.users = [{ id: 1 }];
+    expect(store.isInitialLoading).toBe(false);
+  });
+
+  it('false, когда загрузка завершена', () => {
+    const store = new UsersStore();
+    store.loading = false;
+    expect(store.isInitialLoading).toBe(false);
+  });
+});
+
 describe('защита от гонки', () => {
   it('поздний ответ не затирает результат более свежего запроса', async () => {
     let resolveSlow;

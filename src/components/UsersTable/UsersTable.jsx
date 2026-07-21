@@ -3,9 +3,12 @@ import { TableHeaderCell } from './TableHeaderCell';
 import { TableRow } from './TableRow';
 import styles from './UsersTable.module.css';
 
-export function UsersTable({ users = [], sortBy = null, order = null, onSort = () => {} }) {
+export function UsersTable({ users = [], sortBy = null, order = null, onSort = () => {}, loading = false }) {
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={loading ? `${styles.wrapper} ${styles.loading}` : styles.wrapper}
+      aria-busy={loading}
+    >
       <table className={styles.table}>
         <thead>
           <tr>
