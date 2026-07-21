@@ -11,14 +11,22 @@ const App = observer(function App() {
     usersStore.load();
   }, []);
 
-  const { users, loading, error } = usersStore;
+  const { users, loading, error, sortBy, order, isInitialLoading } = usersStore;
 
   return (
     <div className="app">
       <h1>Пользователи</h1>
-      {loading && <Loader />}
+      {isInitialLoading && <Loader />}
       {error && <ErrorMessage message={error} onRetry={() => usersStore.refetch()} />}
-      {!loading && !error && <UsersTable users={users} />}
+      {!isInitialLoading && !error && (
+        <UsersTable
+          users={users}
+          sortBy={sortBy}
+          order={order}
+          onSort={(field) => usersStore.setSort(field)}
+          loading={loading}
+        />
+      )}
     </div>
   );
 });

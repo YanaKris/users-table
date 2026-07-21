@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { UsersTable } from './UsersTable';
 
 const users = [{
@@ -37,5 +38,42 @@ describe('UsersTable', () => {
     render(<UsersTable users={users} />);
     const rows = screen.getAllByRole('row');
     expect(within(rows[1]).getByText('29')).toHaveStyle({ textAlign: 'right' });
+  });
+
+  it('клик по сортируемому заголовку вызывает onSort с полем', async () => {
+    const onSort = vi.fn();
+    render(<UsersTable users={users} onSort={onSort} />);
+    await userEvent.click(screen.getByRole('button', { name: /Возраст/ }));
+    expect(onSort).toHaveBeenCalledWith('age');
+  });
+
+  it('колонка «Отчество» сортируемая — клик вызывает onSort с maidenName', async () => {
+    const onSort = vi.fn();
+    render(<UsersTable users={users} onSort={onSort} />);
+    await userEvent.click(screen.getByRole('button', { name: /Отчество/ }));
+    expect(onSort).toHaveBeenCalledWith('maidenName');
+  });
+
+  it('во время загрузки контейнер помечается aria-busy и данные остаются', () => {
+    const { container } = render(<UsersTable users={users} loading />);
+    expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument();
+    expect(screen.getByText('Johnson')).toBeInTheDocument();
+  });
+
+  it('без загрузки контейнер не помечается aria-busy', () => {
+    const { container } = render(<UsersTable users={users} />);
+    expect(container.querySelector('[aria-busy="true"]')).toBeNull();
+  });
+
+  it('пробрасывает sortBy/order в заголовки — активная колонка помечена aria-sort', () => {
+    render(<UsersTable users={users} sortBy="age" order="asc" />);
+    expect(screen.getByRole('columnheader', { name: /Возраст/ }))
+      .toHaveAttribute('aria-sort', 'ascending');
+  });
+
+  it('без onSort клик по заголовку не роняет компонент', async () => {
+    render(<UsersTable users={users} />);
+    await userEvent.click(screen.getByRole('button', { name: /Возраст/ }));
+    expect(screen.getByText('Johnson')).toBeInTheDocument();
   });
 });
