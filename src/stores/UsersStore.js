@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from 'mobx';
-import { getUsers } from '../api/usersApi';
+import { getUsers, searchUsers } from '../api/usersApi';
 import { ORDER } from '../constants/sort';
 
 export class UsersStore {
@@ -11,6 +11,7 @@ export class UsersStore {
   page = 1;
   sortBy = null;
   order = null;
+  search = '';
   lastRequestId = 0;
 
   constructor() {
@@ -34,12 +35,15 @@ export class UsersStore {
     this.loading = true;
     this.error = null;
     try {
-      const data = await getUsers({
+      const params = {
         limit: this.limit,
         skip: this.skip,
         sortBy: this.sortBy,
         order: this.order,
-      });
+      };
+      const data = this.search
+        ? await searchUsers({ q: this.search, ...params })
+        : await getUsers(params);
       if (requestId !== this.lastRequestId) return;
       runInAction(() => {
         this.users = data.users;
@@ -77,6 +81,12 @@ export class UsersStore {
 
   setPage(page) {
     this.page = page;
+    this.load();
+  }
+
+  setSearch(query) {
+    this.search = query;
+    this.page = 1;
     this.load();
   }
 

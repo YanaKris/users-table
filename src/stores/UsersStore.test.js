@@ -1,7 +1,7 @@
 import { UsersStore } from './UsersStore';
-import { getUsers } from '../api/usersApi';
+import { getUsers, searchUsers } from '../api/usersApi';
 
-vi.mock('../api/usersApi', () => ({ getUsers: vi.fn() }));
+vi.mock('../api/usersApi', () => ({ getUsers: vi.fn(), searchUsers: vi.fn() }));
 
 afterEach(() => vi.clearAllMocks());
 
@@ -150,7 +150,7 @@ describe('пагинация', () => {
   it('skip вычисляется из page и limit', () => {
     const store = new UsersStore();
     store.page = 3;
-    expect(store.skip).toBe(60); // (3 - 1) * 30
+    expect(store.skip).toBe(60);
   });
 
   it('setPage перезагружает с новым skip', async () => {
@@ -171,5 +171,35 @@ describe('пагинация', () => {
     store.setPage(4);
     store.setSort('age');
     expect(store.page).toBe(1);
+  });
+});
+
+describe('поиск', () => {
+  beforeEach(() => {
+    getUsers.mockResolvedValue({ users: [], total: 0 });
+    searchUsers.mockResolvedValue({ users: [], total: 0 });
+  });
+
+  it('setSearch сохраняет запрос и сбрасывает на первую страницу', () => {
+    const store = new UsersStore();
+    store.setPage(3);
+    store.setSearch('john');
+    expect(store.search).toBe('john');
+    expect(store.page).toBe(1);
+  });
+
+  it('при непустом поиске load идёт через searchUsers с q', async () => {
+    const store = new UsersStore();
+    store.search = 'john';
+    await store.load();
+    expect(searchUsers).toHaveBeenCalledWith(expect.objectContaining({ q: 'john' }));
+    expect(getUsers).not.toHaveBeenCalled();
+  });
+
+  it('при пустом поиске load идёт через getUsers', async () => {
+    const store = new UsersStore();
+    await store.load();
+    expect(getUsers).toHaveBeenCalled();
+    expect(searchUsers).not.toHaveBeenCalled();
   });
 });
