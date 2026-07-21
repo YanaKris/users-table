@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { UsersTable } from './UsersTable';
 
 const users = [{
@@ -37,5 +38,12 @@ describe('UsersTable', () => {
     render(<UsersTable users={users} />);
     const rows = screen.getAllByRole('row');
     expect(within(rows[1]).getByText('29')).toHaveStyle({ textAlign: 'right' });
+  });
+
+  it('клик по сортируемому заголовку вызывает onSort с полем', async () => {
+    const onSort = vi.fn();
+    render(<UsersTable users={users} onSort={onSort} />);
+    await userEvent.click(screen.getByRole('button', { name: /Возраст/ }));
+    expect(onSort).toHaveBeenCalledWith('age');
   });
 });

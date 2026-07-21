@@ -1,15 +1,22 @@
 import { COLUMNS } from '../../constants/columns';
+import { TableHeaderCell } from './TableHeaderCell';
 import { TableRow } from './TableRow';
 import styles from './UsersTable.module.css';
 
-export function UsersTable({ users = [] }) {
+export function UsersTable({ users = [], sortBy = null, order = null, onSort = () => {} }) {
   return (
     <div className={styles.wrapper}>
       <table className={styles.table}>
         <thead>
           <tr>
             {COLUMNS.map((col) => (
-              <th key={col.key} style={col.align ? { textAlign: col.align } : undefined}>{col.label}</th>
+              <TableHeaderCell
+                key={col.key}
+                column={col}
+                sortBy={sortBy}
+                order={order}
+                onSort={onSort}
+              />
             ))}
           </tr>
         </thead>
