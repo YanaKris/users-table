@@ -26,3 +26,8 @@ it('показывает «Ничего не найдено» для пусто�
   render(<UsersTable users={[]} />);
   expect(screen.getByText('Ничего не найдено')).toBeInTheDocument();
 });
+
+it('не падает без пропа users — показывает пустое состояние', () => {
+  render(<UsersTable />);
+  expect(screen.getByText('Ничего не найдено')).toBeInTheDocument();
+});

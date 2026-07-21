@@ -2,7 +2,7 @@ import { COLUMNS } from '../../constants/columns';
 import { TableRow } from './TableRow';
 import styles from './UsersTable.module.css';
 
-export function UsersTable({ users }) {
+export function UsersTable({ users = [] }) {
   return (
     <div className={styles.wrapper}>
       <table className={styles.table}>
