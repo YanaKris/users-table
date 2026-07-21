@@ -43,3 +43,44 @@ it('refetch повторно запрашивает данные', async () => {
   await store.refetch();
   expect(getUsers).toHaveBeenCalledTimes(2);
 });
+
+describe('сортировка', () => {
+  beforeEach(() => getUsers.mockResolvedValue({ users: [], total: 0 }));
+
+  it('setSort по новому полю включает возрастание (asc)', () => {
+    const store = new UsersStore();
+    store.setSort('age');
+    expect(store.sortBy).toBe('age');
+    expect(store.order).toBe('asc');
+  });
+
+  it('setSort по тому же полю циклит asc → desc → none', () => {
+    const store = new UsersStore();
+    store.setSort('age'); // asc
+    store.setSort('age'); // desc
+    expect(store.order).toBe('desc');
+    store.setSort('age'); // none
+    expect(store.sortBy).toBeNull();
+    expect(store.order).toBeNull();
+  });
+
+  it('setSort по другому полю начинает заново с asc', () => {
+    const store = new UsersStore();
+    store.setSort('age');
+    store.setSort('lastName');
+    expect(store.sortBy).toBe('lastName');
+    expect(store.order).toBe('asc');
+  });
+
+  it('load передаёт sortBy и order в getUsers', async () => {
+    const store = new UsersStore();
+    store.sortBy = 'age';
+    store.order = 'desc';
+
+    await store.load();
+
+    expect(getUsers).toHaveBeenCalledWith(
+      expect.objectContaining({ sortBy: 'age', order: 'desc' })
+    );
+  });
+});

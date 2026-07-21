@@ -8,6 +8,8 @@ export class UsersStore {
   error = null;
   limit = 30;
   skip = 0;
+  sortBy = null;
+  order = null;
 
   constructor() {
     makeAutoObservable(this);
@@ -17,7 +19,12 @@ export class UsersStore {
     this.loading = true;
     this.error = null;
     try {
-      const data = await getUsers({ limit: this.limit, skip: this.skip });
+      const data = await getUsers({
+        limit: this.limit,
+        skip: this.skip,
+        sortBy: this.sortBy,
+        order: this.order,
+      });
       runInAction(() => {
         this.users = data.users;
         this.total = data.total;
@@ -33,6 +40,19 @@ export class UsersStore {
         this.loading = false;
       });
     }
+  }
+
+  setSort(field) {
+    if (this.sortBy !== field) {
+      this.sortBy = field;
+      this.order = 'asc';
+    } else if (this.order === 'asc') {
+      this.order = 'desc';
+    } else {
+      this.sortBy = null;
+      this.order = null;
+    }
+    this.load();
   }
 
   refetch() {
