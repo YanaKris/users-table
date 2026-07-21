@@ -9,7 +9,7 @@ describe('COLUMNS', () => {
 
   it('сортируемые поля — ФИО/возраст/пол/телефон', () => {
     const fields = COLUMNS.filter((c) => c.sortField).map((c) => c.sortField);
-    expect(fields).toEqual(['lastName', 'firstName', 'age', 'gender', 'phone']);
+    expect(fields).toEqual(['lastName', 'firstName', 'maidenName', 'age', 'gender', 'phone']);
   });
 
   it('getValue достаёт вложенные поля адреса', () => {

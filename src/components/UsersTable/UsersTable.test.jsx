@@ -47,6 +47,13 @@ describe('UsersTable', () => {
     expect(onSort).toHaveBeenCalledWith('age');
   });
 
+  it('колонка «Отчество» сортируемая — клик вызывает onSort с maidenName', async () => {
+    const onSort = vi.fn();
+    render(<UsersTable users={users} onSort={onSort} />);
+    await userEvent.click(screen.getByRole('button', { name: /Отчество/ }));
+    expect(onSort).toHaveBeenCalledWith('maidenName');
+  });
+
   it('во время загрузки контейнер помечается aria-busy и данные остаются', () => {
     const { container } = render(<UsersTable users={users} loading />);
     expect(container.querySelector('[aria-busy="true"]')).toBeInTheDocument();
