@@ -84,3 +84,24 @@ describe('сортировка', () => {
     );
   });
 });
+
+describe('защита от гонки', () => {
+  it('поздний ответ не затирает результат более свежего запроса', async () => {
+    let resolveSlow;
+    const slow = new Promise((resolve) => { resolveSlow = resolve; });
+    getUsers
+      .mockReturnValueOnce(slow) // первый запрос — «медленный»
+      .mockResolvedValueOnce({ users: [{ id: 2 }], total: 2 }); // второй — быстрый
+
+    const store = new UsersStore();
+
+    const firstLoad = store.load();
+    await store.load();
+
+    resolveSlow({ users: [{ id: 1 }], total: 1 });
+    await firstLoad;
+
+    expect(store.users).toEqual([{ id: 2 }]);
+    expect(store.total).toBe(2);
+  });
+});

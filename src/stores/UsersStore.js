@@ -10,12 +10,14 @@ export class UsersStore {
   skip = 0;
   sortBy = null;
   order = null;
+  lastRequestId = 0;
 
   constructor() {
-    makeAutoObservable(this);
+    makeAutoObservable(this, { lastRequestId: false });
   }
 
   async load() {
+    const requestId = ++this.lastRequestId;
     this.loading = true;
     this.error = null;
     try {
@@ -25,20 +27,24 @@ export class UsersStore {
         sortBy: this.sortBy,
         order: this.order,
       });
+      if (requestId !== this.lastRequestId) return;
       runInAction(() => {
         this.users = data.users;
         this.total = data.total;
       });
     } catch (err) {
+      if (requestId !== this.lastRequestId) return;
       runInAction(() => {
         this.error = err.message;
         this.users = [];
         this.total = 0;
       });
     } finally {
-      runInAction(() => {
-        this.loading = false;
-      });
+      if (requestId === this.lastRequestId) {
+        runInAction(() => {
+          this.loading = false;
+        });
+      }
     }
   }
 
