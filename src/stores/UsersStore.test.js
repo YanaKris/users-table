@@ -143,3 +143,33 @@ describe('защита от гонки', () => {
     expect(store.error).toBeNull();
   });
 });
+
+describe('пагинация', () => {
+  beforeEach(() => getUsers.mockResolvedValue({ users: [], total: 208 }));
+
+  it('skip вычисляется из page и limit', () => {
+    const store = new UsersStore();
+    store.page = 3;
+    expect(store.skip).toBe(60); // (3 - 1) * 30
+  });
+
+  it('setPage перезагружает с новым skip', async () => {
+    const store = new UsersStore();
+    store.setPage(2);
+    await store.load();
+    expect(getUsers).toHaveBeenCalledWith(expect.objectContaining({ skip: 30 }));
+  });
+
+  it('totalPages вычисляется из total и limit', async () => {
+    const store = new UsersStore();
+    await store.load();
+    expect(store.totalPages).toBe(7);
+  });
+
+  it('смена сортировки сбрасывает на первую страницу', () => {
+    const store = new UsersStore();
+    store.setPage(4);
+    store.setSort('age');
+    expect(store.page).toBe(1);
+  });
+});

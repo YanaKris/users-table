@@ -1,0 +1,30 @@
+.pagination {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 16px auto;
+}
+.pagination button {
+  min-width: 36px;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.pagination button:hover:not(:disabled) {
+  background: var(--color-surface-alt);
+}
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.active {
+  background: var(--color-text);
+  color: var(--color-surface);
+  border-color: var(--color-text);
+  font-weight: 600;
+}
