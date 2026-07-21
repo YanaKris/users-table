@@ -21,22 +21,26 @@ const App = observer(function App() {
     <div className="app">
       <h1>Пользователи</h1>
       {isInitialLoading && <Loader />}
-      {error && <ErrorMessage message={error} onRetry={() => usersStore.refetch()} />}
-      {!isInitialLoading && !error && (
+      {!isInitialLoading && (
         <>
           <Filters onSearch={handleSearch} />
-          <UsersTable
-            users={users}
-            sortBy={sortBy}
-            order={order}
-            onSort={(field) => usersStore.setSort(field)}
-            loading={loading}
-          />
-          <Pagination
-            page={page}
-            totalPages={totalPages}
-            onPageChange={(p) => usersStore.setPage(p)}
-          />
+          {error && <ErrorMessage message={error} onRetry={() => usersStore.refetch()} />}
+          {!error && (
+            <>
+              <UsersTable
+                users={users}
+                sortBy={sortBy}
+                order={order}
+                onSort={(field) => usersStore.setSort(field)}
+                loading={loading}
+              />
+              <Pagination
+                page={page}
+                totalPages={totalPages}
+                onPageChange={(p) => usersStore.setPage(p)}
+              />
+            </>
+          )}
         </>
       )}
     </div>

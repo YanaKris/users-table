@@ -1,10 +1,10 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import App from './App';
-import { getUsers } from './api/usersApi';
+import { getUsers, searchUsers } from './api/usersApi';
 import { usersStore } from './stores/UsersStore';
 
-vi.mock('./api/usersApi', () => ({ getUsers: vi.fn() }));
+vi.mock('./api/usersApi', () => ({ getUsers: vi.fn(), searchUsers: vi.fn() }));
 
 describe('App', () => {
   beforeEach(() => {
@@ -14,6 +14,7 @@ describe('App', () => {
     usersStore.order = null;
     usersStore.page = 1;
     usersStore.total = 0;
+    usersStore.search = '';
   });
   afterEach(() => vi.clearAllMocks());
 
@@ -90,5 +91,21 @@ describe('App', () => {
     render(<App />);
     await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
     expect(screen.getByRole('searchbox')).toBeInTheDocument();
+  });
+
+  it('при ошибке во время поиска поле остаётся на экране с введённым текстом', async () => {
+    getUsers.mockResolvedValue({
+      users: [{ id: 1, lastName: 'Johnson', firstName: 'Emily', address: { city: 'Phoenix' } }],
+      total: 1,
+    });
+    searchUsers.mockRejectedValue(new Error('Ошибка сети'));
+
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
+
+    await userEvent.type(screen.getByRole('searchbox'), 'xyz');
+
+    await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument(), { timeout: 2000 });
+    expect(screen.getByRole('searchbox')).toHaveValue('xyz');
   });
 });
