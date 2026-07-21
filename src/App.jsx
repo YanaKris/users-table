@@ -1,14 +1,17 @@
 import { useEffect } from 'react';
+import { getUsers } from './api/usersApi';
 import './App.css';
 
 function App() {
   useEffect(() => {
-    fetch('https://dummyjson.com/users')
-      .then((response) => response.json())
+    getUsers({ limit: 30, skip: 0 })
       .then((data) => {
         console.log(data);
         console.log('Список пользователей:', data.users);
         console.log(data.users.length, 'из', data.total);
+      })
+      .catch((error) => {
+        console.error('Ошибка загрузки:', error.message);
       });
   }, []);
 
