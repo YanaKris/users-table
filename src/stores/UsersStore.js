@@ -8,7 +8,7 @@ export class UsersStore {
   loading = true;
   error = null;
   limit = 30;
-  skip = 0;
+  page = 1;
   sortBy = null;
   order = null;
   lastRequestId = 0;
@@ -19,6 +19,14 @@ export class UsersStore {
 
   get isInitialLoading() {
     return this.loading && this.users.length === 0;
+  }
+
+  get skip() {
+    return (this.page - 1) * this.limit;
+  }
+
+  get totalPages() {
+    return Math.max(1, Math.ceil(this.total / this.limit));
   }
 
   async load() {
@@ -63,6 +71,12 @@ export class UsersStore {
       this.sortBy = null;
       this.order = null;
     }
+    this.page = 1;
+    this.load();
+  }
+
+  setPage(page) {
+    this.page = page;
     this.load();
   }
 
