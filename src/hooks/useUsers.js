@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getUsers } from '../api/usersApi';
 
 export function useUsers({ limit = 30, skip = 0 } = {}) {
@@ -6,6 +6,7 @@ export function useUsers({ limit = 30, skip = 0 } = {}) {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reloadKey, setReloadKey] = useState(0);
 
   useEffect(() => {
     async function load() {
@@ -24,7 +25,13 @@ export function useUsers({ limit = 30, skip = 0 } = {}) {
     }
 
     load();
-  }, [limit, skip]);
+  }, [limit, skip, reloadKey]);
 
-  return { users, total, loading, error };
+  const refetch = useCallback(() => {
+    setLoading(true);
+    setError(null);
+    setReloadKey((key) => key + 1);
+  }, []);
+
+  return { users, total, loading, error, refetch };
 }

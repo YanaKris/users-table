@@ -1,4 +1,4 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { useUsers } from './useUsers';
 import { getUsers } from '../api/usersApi';
 
@@ -29,4 +29,18 @@ it('ошибка: отдаёт error и пустой список', async () => 
   await waitFor(() => expect(result.current.loading).toBe(false));
   expect(result.current.error).toMatch(/Ошибка сети/);
   expect(result.current.users).toEqual([]);
+});
+
+it('refetch повторно запрашивает данные', async () => {
+  getUsers.mockResolvedValue({ users: [{ id: 1 }], total: 1 });
+  const { result } = renderHook(() => useUsers({ limit: 30, skip: 0 }));
+
+  await waitFor(() => expect(result.current.loading).toBe(false));
+  expect(getUsers).toHaveBeenCalledTimes(1);
+
+  act(() => {
+    result.current.refetch();
+  });
+
+  await waitFor(() => expect(getUsers).toHaveBeenCalledTimes(2));
 });
