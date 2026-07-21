@@ -8,7 +8,9 @@ export function UsersTable({ users = [] }) {
       <table className={styles.table}>
         <thead>
           <tr>
-            {COLUMNS.map((col) => <th key={col.key}>{col.label}</th>)}
+            {COLUMNS.map((col) => (
+              <th key={col.key} style={col.align ? { textAlign: col.align } : undefined}>{col.label}</th>
+            ))}
           </tr>
         </thead>
         <tbody>
