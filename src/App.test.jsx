@@ -12,6 +12,8 @@ describe('App', () => {
     usersStore.error = null;
     usersStore.sortBy = null;
     usersStore.order = null;
+    usersStore.page = 1;
+    usersStore.total = 0;
   });
   afterEach(() => vi.clearAllMocks());
 
@@ -66,5 +68,17 @@ describe('App', () => {
 
     await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
     expect(getUsers).toHaveBeenCalledTimes(2);
+  });
+
+  it('показывает пагинацию, когда страниц больше одной', async () => {
+    getUsers.mockResolvedValue({
+      users: [{ id: 1, lastName: 'Johnson', firstName: 'Emily', address: { city: 'Phoenix' } }],
+      total: 208,
+    });
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
+
+    expect(screen.getByRole('navigation', { name: 'Пагинация' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Вперёд' })).toBeInTheDocument();
   });
 });
