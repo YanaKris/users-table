@@ -81,4 +81,14 @@ describe('App', () => {
     expect(screen.getByRole('navigation', { name: 'Пагинация' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Вперёд' })).toBeInTheDocument();
   });
+
+  it('показывает поле поиска над таблицей', async () => {
+    getUsers.mockResolvedValue({
+      users: [{ id: 1, lastName: 'Johnson', firstName: 'Emily', address: { city: 'Phoenix' } }],
+      total: 1,
+    });
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
+    expect(screen.getByRole('searchbox')).toBeInTheDocument();
+  });
 });
