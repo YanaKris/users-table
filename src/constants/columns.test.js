@@ -1,4 +1,15 @@
-import { COLUMNS } from './columns';
+import { COLUMNS, alignStyle } from './columns';
+
+describe('alignStyle', () => {
+  it('возвращает объект textAlign для заданного выравнивания', () => {
+    expect(alignStyle('right')).toEqual({ textAlign: 'right' });
+  });
+
+  it('возвращает undefined, если выравнивание не задано', () => {
+    expect(alignStyle(undefined)).toBeUndefined();
+    expect(alignStyle(null)).toBeUndefined();
+  });
+});
 
 describe('COLUMNS', () => {
   it('9 колонок ТЗ в правильном порядке', () => {

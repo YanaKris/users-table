@@ -11,3 +11,7 @@ export const COLUMNS = [
   { key: 'country',    label: 'Страна',   sortField: null,        getValue: (u) => u.address?.country },
   { key: 'city',       label: 'Город',    sortField: null,        getValue: (u) => u.address?.city },
 ];
+
+export function alignStyle(align) {
+  return align ? { textAlign: align } : undefined;
+}

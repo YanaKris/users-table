@@ -1,15 +1,17 @@
+import { alignStyle } from '../../constants/columns';
+import { ORDER } from '../../constants/sort';
 import styles from './TableHeaderCell.module.css';
 
 export function TableHeaderCell({ column, sortBy, order, onSort }) {
-  const style = column.align ? { textAlign: column.align } : undefined;
+  const style = alignStyle(column.align);
 
   if (!column.sortField) {
     return <th style={style}>{column.label}</th>;
   }
 
   const active = sortBy === column.sortField;
-  const ariaSort = active ? (order === 'asc' ? 'ascending' : 'descending') : 'none';
-  const arrow = active ? (order === 'asc' ? '▲' : '▼') : '↕';
+  const ariaSort = active ? (order === ORDER.ASC ? 'ascending' : 'descending') : 'none';
+  const arrow = active ? (order === ORDER.ASC ? '▲' : '▼') : '↕';
 
   return (
     <th style={style} aria-sort={ariaSort}>

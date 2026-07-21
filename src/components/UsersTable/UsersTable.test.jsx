@@ -64,4 +64,16 @@ describe('UsersTable', () => {
     const { container } = render(<UsersTable users={users} />);
     expect(container.querySelector('[aria-busy="true"]')).toBeNull();
   });
+
+  it('пробрасывает sortBy/order в заголовки — активная колонка помечена aria-sort', () => {
+    render(<UsersTable users={users} sortBy="age" order="asc" />);
+    expect(screen.getByRole('columnheader', { name: /Возраст/ }))
+      .toHaveAttribute('aria-sort', 'ascending');
+  });
+
+  it('без onSort клик по заголовку не роняет компонент', async () => {
+    render(<UsersTable users={users} />);
+    await userEvent.click(screen.getByRole('button', { name: /Возраст/ }));
+    expect(screen.getByText('Johnson')).toBeInTheDocument();
+  });
 });

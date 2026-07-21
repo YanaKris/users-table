@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import { getUsers } from '../api/usersApi';
+import { ORDER } from '../constants/sort';
 
 export class UsersStore {
   users = [];
@@ -55,9 +56,9 @@ export class UsersStore {
   setSort(field) {
     if (this.sortBy !== field) {
       this.sortBy = field;
-      this.order = 'asc';
-    } else if (this.order === 'asc') {
-      this.order = 'desc';
+      this.order = ORDER.ASC;
+    } else if (this.order === ORDER.ASC) {
+      this.order = ORDER.DESC;
     } else {
       this.sortBy = null;
       this.order = null;
