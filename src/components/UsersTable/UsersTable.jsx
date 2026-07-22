@@ -9,6 +9,7 @@ export function UsersTable({ users = [], sortBy = null, order = null, onSort = (
   const { widths, startResize, resizing } = useColumnResize(COLUMNS);
   const wrapperRef = useRef(null);
   const guideRef = useRef(null);
+  const totalWidth = COLUMNS.reduce((sum, col) => sum + (widths[col.key] || 0), 0);
 
   useEffect(() => {
     const guide = guideRef.current;
@@ -30,7 +31,7 @@ export function UsersTable({ users = [], sortBy = null, order = null, onSort = (
       aria-busy={loading}
     >
       <div ref={guideRef} className={styles.guide} aria-hidden="true" style={{ display: 'none' }} />
-      <table className={styles.table}>
+      <table className={styles.table} style={{ width: totalWidth }}>
         <colgroup>
           {COLUMNS.map((col) => (
             <col key={col.key} style={{ width: widths[col.key] }} />

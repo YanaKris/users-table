@@ -32,4 +32,16 @@ describe('COLUMNS', () => {
   it('getValue для пола форматирует в русский', () => {
     expect(COLUMNS.find((c) => c.key === 'gender').getValue({ gender: 'female' })).toBe('Женский');
   });
+
+  it('у каждой колонки задана дефолтная ширина не меньше 50px', () => {
+    COLUMNS.forEach((col) => {
+      expect(typeof col.width).toBe('number');
+      expect(col.width).toBeGreaterThanOrEqual(50);
+    });
+  });
+
+  it('сумма дефолтных ширин не превышает 1400px — таблица влезает в контейнер без горизонтального скролла', () => {
+    const total = COLUMNS.reduce((sum, col) => sum + col.width, 0);
+    expect(total).toBeLessThanOrEqual(1400);
+  });
 });

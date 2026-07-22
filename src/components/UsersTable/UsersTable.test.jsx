@@ -1,6 +1,7 @@
 import { render, screen, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UsersTable } from './UsersTable';
+import { COLUMNS } from '../../constants/columns';
 
 const users = [{
   id: 1, lastName: 'Johnson', firstName: 'Emily', maidenName: 'Smith',
@@ -118,5 +119,11 @@ describe('UsersTable', () => {
     render(<UsersTable users={users} />);
     expect(screen.getByTestId('resizer-lastName')).toBeInTheDocument();
     expect(screen.getByTestId('resizer-email')).toBeInTheDocument();
+  });
+
+  it('таблице задаётся явная ширина — сумма ширин колонок (fixed-layout без перераспределения)', () => {
+    render(<UsersTable users={users} />);
+    const total = COLUMNS.reduce((sum, col) => sum + col.width, 0);
+    expect(screen.getByRole('table')).toHaveStyle({ width: `${total}px` });
   });
 });
