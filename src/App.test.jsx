@@ -129,4 +129,28 @@ describe('App', () => {
     expect(dialog).toHaveTextContent('Johnson Emily');
     expect(dialog).toHaveTextContent('emily@x.dummyjson.com');
   });
+
+  it('при открытой модалке фокус заперт внутри — Tab не попадает в поиск за оверлеем', async () => {
+    getUsers.mockResolvedValue({
+      users: [{
+        id: 1, lastName: 'Johnson', firstName: 'Emily', age: 28,
+        height: 165, weight: 60, phone: '+81 965-431-3024',
+        email: 'emily@x.dummyjson.com', image: 'https://x/img.png',
+        address: { city: 'Phoenix', country: 'United States' },
+      }],
+      total: 1,
+    });
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('Johnson'));
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveFocus();
+
+    for (let i = 0; i < 5; i += 1) {
+      await userEvent.tab();
+      expect(screen.getByRole('searchbox')).not.toHaveFocus();
+      expect(dialog.contains(document.activeElement)).toBe(true);
+    }
+  });
 });
