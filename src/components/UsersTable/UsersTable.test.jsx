@@ -76,4 +76,11 @@ describe('UsersTable', () => {
     await userEvent.click(screen.getByRole('button', { name: /Возраст/ }));
     expect(screen.getByText('Johnson')).toBeInTheDocument();
   });
+
+  it('клик по строке вызывает onRowClick с пользователем', async () => {
+    const onRowClick = vi.fn();
+    render(<UsersTable users={users} onRowClick={onRowClick} />);
+    await userEvent.click(screen.getByText('Johnson'));
+    expect(onRowClick).toHaveBeenCalledWith(users[0]);
+  });
 });

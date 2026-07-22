@@ -3,7 +3,7 @@ import { TableHeaderCell } from './TableHeaderCell';
 import { TableRow } from './TableRow';
 import styles from './UsersTable.module.css';
 
-export function UsersTable({ users = [], sortBy = null, order = null, onSort = () => {}, loading = false }) {
+export function UsersTable({ users = [], sortBy = null, order = null, onSort = () => {}, loading = false, onRowClick = () => {} }) {
   return (
     <div
       className={loading ? `${styles.wrapper} ${styles.loading}` : styles.wrapper}
@@ -29,7 +29,7 @@ export function UsersTable({ users = [], sortBy = null, order = null, onSort = (
               <td className={styles.empty} colSpan={COLUMNS.length}>Ничего не найдено</td>
             </tr>
           ) : (
-            users.map((user) => <TableRow key={user.id} user={user} />)
+            users.map((user) => <TableRow key={user.id} user={user} onRowClick={onRowClick} />)
           )}
         </tbody>
       </table>
