@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { TableHeaderCell } from './TableHeaderCell';
 
@@ -49,4 +49,21 @@ it('активная колонка по убыванию — aria-sort=descendi
 it('сортируемая, но неактивная — aria-sort=none', () => {
   renderCell(sortableCol, { sortBy: 'lastName', order: 'asc' });
   expect(screen.getByRole('columnheader')).toHaveAttribute('aria-sort', 'none');
+});
+
+it('mousedown на ручке ресайза вызывает onResizeStart с ключом колонки', () => {
+  const onResizeStart = vi.fn();
+  renderCell(sortableCol, { onResizeStart });
+  fireEvent.mouseDown(screen.getByTestId('resizer-age'));
+  expect(onResizeStart).toHaveBeenCalledWith('age', expect.anything());
+});
+
+it('ручка ресайза есть и у несортируемой колонки', () => {
+  renderCell(plainCol, { onResizeStart: () => {} });
+  expect(screen.getByTestId('resizer-email')).toBeInTheDocument();
+});
+
+it('во время ресайза ручка активной колонки помечается классом dragging', () => {
+  renderCell(sortableCol, { onResizeStart: () => {}, resizingKey: 'age' });
+  expect(screen.getByTestId('resizer-age').className).toMatch(/dragging/);
 });
