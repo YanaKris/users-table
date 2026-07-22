@@ -155,6 +155,7 @@ describe('пагинация', () => {
 
   it('setPage перезагружает с новым skip', async () => {
     const store = new UsersStore();
+    store.total = 208;
     store.setPage(2);
     await store.load();
     expect(getUsers).toHaveBeenCalledWith(expect.objectContaining({ skip: 30 }));
@@ -168,9 +169,24 @@ describe('пагинация', () => {
 
   it('смена сортировки сбрасывает на первую страницу', () => {
     const store = new UsersStore();
+    store.total = 208;
     store.setPage(4);
     store.setSort('age');
     expect(store.page).toBe(1);
+  });
+
+  it('setPage не опускается ниже первой страницы', () => {
+    const store = new UsersStore();
+    store.total = 208;
+    store.setPage(0);
+    expect(store.page).toBe(1);
+  });
+
+  it('setPage не превышает последнюю страницу', () => {
+    const store = new UsersStore();
+    store.total = 208;
+    store.setPage(999);
+    expect(store.page).toBe(7);
   });
 });
 

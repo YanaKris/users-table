@@ -80,7 +80,7 @@ export class UsersStore {
   }
 
   setPage(page) {
-    this.page = page;
+    this.page = Math.min(Math.max(1, page), this.totalPages);
     this.load();
   }
 
