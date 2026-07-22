@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 const MIN_WIDTH = 50;
 
@@ -8,27 +8,42 @@ export function useColumnResize(columns, defaultWidth = 150) {
   );
   const [resizing, setResizing] = useState(null);
 
+  const widthsRef = useRef(widths);
+  useEffect(() => {
+    widthsRef.current = widths;
+  }, [widths]);
+  const dragRef = useRef(null);
+
   const startResize = useCallback((key, event) => {
+    if (event.button !== 0) return;
     event.preventDefault();
-    const startX = event.clientX;
-    const startWidth = widths[key];
-    setResizing({ key, clientX: startX });
+    dragRef.current = { key, startX: event.clientX, startWidth: widthsRef.current[key] ?? MIN_WIDTH };
+    setResizing({ key, clientX: event.clientX });
+  }, []);
+
+  const activeKey = resizing ? resizing.key : null;
+  useEffect(() => {
+    if (!activeKey) return undefined;
 
     const onMove = (moveEvent) => {
-      const delta = moveEvent.clientX - startX;
-      const newWidth = Math.max(MIN_WIDTH, startWidth + delta);
+      if (moveEvent.buttons === 0) {
+        setResizing(null);
+        return;
+      }
+      const { key, startX, startWidth } = dragRef.current;
+      const newWidth = Math.max(MIN_WIDTH, startWidth + (moveEvent.clientX - startX));
       setWidths((prev) => ({ ...prev, [key]: newWidth }));
       setResizing({ key, clientX: moveEvent.clientX });
     };
-    const onUp = () => {
-      setResizing(null);
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
-    };
+    const onUp = () => setResizing(null);
 
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mouseup', onUp);
-  }, [widths]);
+    return () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+  }, [activeKey]);
 
   return { widths, startResize, resizing };
 }
