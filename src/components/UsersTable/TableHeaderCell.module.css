@@ -19,8 +19,8 @@
 .resizer {
   position: absolute;
   top: 0;
-  right: -3px;
-  width: 6px;
+  right: 0;
+  width: 8px;
   height: 100%;
   cursor: col-resize;
   opacity: 0;
