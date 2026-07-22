@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from 'mobx';
+import { makeAutoObservable, observable, runInAction } from 'mobx';
 import { getUsers, searchUsers } from '../api/usersApi';
 import { ORDER } from '../constants/sort';
 
@@ -12,10 +12,11 @@ export class UsersStore {
   sortBy = null;
   order = null;
   search = '';
+  selectedUser = null;
   lastRequestId = 0;
 
   constructor() {
-    makeAutoObservable(this, { lastRequestId: false });
+    makeAutoObservable(this, { lastRequestId: false, selectedUser: observable.ref });
   }
 
   get isInitialLoading() {
@@ -88,6 +89,14 @@ export class UsersStore {
     this.search = query;
     this.page = 1;
     this.load();
+  }
+
+  selectUser(user) {
+    this.selectedUser = user;
+  }
+
+  clearSelection() {
+    this.selectedUser = null;
   }
 
   refetch() {

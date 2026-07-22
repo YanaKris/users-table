@@ -219,3 +219,19 @@ describe('поиск', () => {
     expect(searchUsers).not.toHaveBeenCalled();
   });
 });
+
+describe('выбранный пользователь', () => {
+  it('selectUser сохраняет выбранного пользователя', () => {
+    const store = new UsersStore();
+    const user = { id: 1, firstName: 'Emily' };
+    store.selectUser(user);
+    expect(store.selectedUser).toBe(user);
+  });
+
+  it('clearSelection сбрасывает выбор', () => {
+    const store = new UsersStore();
+    store.selectUser({ id: 1 });
+    store.clearSelection();
+    expect(store.selectedUser).toBeNull();
+  });
+});

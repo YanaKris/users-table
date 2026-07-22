@@ -4,6 +4,7 @@ import { usersStore } from './stores/UsersStore';
 import { UsersTable } from './components/UsersTable/UsersTable';
 import { Pagination } from './components/Pagination/Pagination';
 import { Filters } from './components/Filters/Filters';
+import { UserModal } from './components/UserModal/UserModal';
 import { Loader } from './components/ui/Loader';
 import { ErrorMessage } from './components/ui/ErrorMessage';
 import './App.css';
@@ -15,7 +16,7 @@ const App = observer(function App() {
 
   const handleSearch = useCallback((query) => usersStore.setSearch(query), []);
 
-  const { users, loading, error, sortBy, order, page, totalPages, isInitialLoading } = usersStore;
+  const { users, loading, error, sortBy, order, page, totalPages, isInitialLoading, selectedUser } = usersStore;
 
   return (
     <div className="app">
@@ -32,6 +33,7 @@ const App = observer(function App() {
                 sortBy={sortBy}
                 order={order}
                 onSort={(field) => usersStore.setSort(field)}
+                onRowClick={(user) => usersStore.selectUser(user)}
                 loading={loading}
               />
               <Pagination
@@ -42,6 +44,9 @@ const App = observer(function App() {
             </>
           )}
         </>
+      )}
+      {selectedUser && (
+        <UserModal user={selectedUser} onClose={() => usersStore.clearSelection()} />
       )}
     </div>
   );
