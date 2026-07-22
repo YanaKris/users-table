@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { UsersTable } from './UsersTable';
 
@@ -82,5 +82,37 @@ describe('UsersTable', () => {
     render(<UsersTable users={users} onRowClick={onRowClick} />);
     await userEvent.click(screen.getByText('Johnson'));
     expect(onRowClick).toHaveBeenCalledWith(users[0]);
+  });
+
+  it('строка доступна с клавиатуры: фокусируется, Enter и Space вызывают onRowClick', async () => {
+    const onRowClick = vi.fn();
+    render(<UsersTable users={users} onRowClick={onRowClick} />);
+    const row = screen.getByText('Johnson').closest('tr');
+
+    row.focus();
+    expect(row).toHaveFocus();
+
+    await userEvent.keyboard('{Enter}');
+    expect(onRowClick).toHaveBeenCalledWith(users[0]);
+
+    await userEvent.keyboard(' ');
+    expect(onRowClick).toHaveBeenCalledTimes(2);
+  });
+
+  it('клик при активном выделении текста в строке НЕ вызывает onRowClick', () => {
+    const onRowClick = vi.fn();
+    render(<UsersTable users={users} onRowClick={onRowClick} />);
+    const cell = screen.getByText('Johnson');
+
+    // после drag-выделения браузер диспатчит click при ещё активном выделении
+    const range = document.createRange();
+    range.selectNodeContents(cell);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+
+    fireEvent.click(cell);
+    expect(onRowClick).not.toHaveBeenCalled();
+
+    window.getSelection().removeAllRanges();
   });
 });

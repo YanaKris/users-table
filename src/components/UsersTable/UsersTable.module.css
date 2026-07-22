@@ -19,4 +19,9 @@
 }
 .table thead th { background: var(--color-surface-alt); font-weight: 600; position: sticky; top: 0; }
 .table tbody tr:hover { background: var(--color-row-hover); }
+.table tbody tr:focus-visible {
+  outline: 2px solid var(--color-text-muted);
+  outline-offset: -2px;
+  background: var(--color-row-hover);
+}
 .empty { text-align: center; color: var(--color-text-muted); padding: 24px; }
