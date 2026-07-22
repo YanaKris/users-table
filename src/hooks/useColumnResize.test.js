@@ -23,7 +23,7 @@ it('увеличивает ширину при перетаскивании вп
 it('не позволяет ширину меньше 50px', () => {
   const { result } = renderHook(() => useColumnResize(columns, 150));
   act(() => result.current.startResize('name', down(100)));
-  act(() => { fireEvent.mouseMove(document, { clientX: 0 }); }); // -100 → clamp 50
+  act(() => { fireEvent.mouseMove(document, { clientX: 0 }); });
   expect(result.current.widths.name).toBe(50);
 });
 
@@ -31,6 +31,20 @@ it('прекращает изменение после отпускания мы
   const { result } = renderHook(() => useColumnResize(columns, 150));
   act(() => result.current.startResize('name', down(100)));
   act(() => { fireEvent.mouseUp(document); });
-  act(() => { fireEvent.mouseMove(document, { clientX: 300 }); }); // после up — игнор
+  act(() => { fireEvent.mouseMove(document, { clientX: 300 }); });
   expect(result.current.widths.name).toBe(150);
+});
+
+it('во время перетаскивания отдаёт позицию направляющей, после отпускания — null', () => {
+  const { result } = renderHook(() => useColumnResize(columns, 150));
+  expect(result.current.resizing).toBeNull();
+
+  act(() => result.current.startResize('name', down(100)));
+  expect(result.current.resizing).toEqual({ key: 'name', clientX: 100 });
+
+  act(() => { fireEvent.mouseMove(document, { clientX: 130 }); });
+  expect(result.current.resizing).toEqual({ key: 'name', clientX: 130 });
+
+  act(() => { fireEvent.mouseUp(document); });
+  expect(result.current.resizing).toBeNull();
 });

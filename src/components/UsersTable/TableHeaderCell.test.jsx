@@ -62,3 +62,8 @@ it('ручка ресайза есть и у несортируемой коло
   renderCell(plainCol, { onResizeStart: () => {} });
   expect(screen.getByTestId('resizer-email')).toBeInTheDocument();
 });
+
+it('во время ресайза ручка активной колонки помечается классом dragging', () => {
+  renderCell(sortableCol, { onResizeStart: () => {}, resizingKey: 'age' });
+  expect(screen.getByTestId('resizer-age').className).toMatch(/dragging/);
+});

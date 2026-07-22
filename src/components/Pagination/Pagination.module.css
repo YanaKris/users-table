@@ -9,7 +9,7 @@
 .pagination button {
   min-width: 36px;
   padding: 6px 10px;
-  border: 1px solid var(--color-border);
+  border: none;
   background: var(--color-surface);
   color: inherit;
   border-radius: 6px;

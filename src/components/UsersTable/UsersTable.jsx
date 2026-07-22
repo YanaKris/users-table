@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { COLUMNS } from '../../constants/columns';
 import { useColumnResize } from '../../hooks/useColumnResize';
 import { TableHeaderCell } from './TableHeaderCell';
@@ -5,13 +6,30 @@ import { TableRow } from './TableRow';
 import styles from './UsersTable.module.css';
 
 export function UsersTable({ users = [], sortBy = null, order = null, onSort = () => {}, loading = false, onRowClick = () => {} }) {
-  const { widths, startResize } = useColumnResize(COLUMNS);
+  const { widths, startResize, resizing } = useColumnResize(COLUMNS);
+  const wrapperRef = useRef(null);
+  const guideRef = useRef(null);
+
+  useEffect(() => {
+    const guide = guideRef.current;
+    const wrapper = wrapperRef.current;
+    if (!guide || !wrapper) return;
+    if (resizing) {
+      const rect = wrapper.getBoundingClientRect();
+      guide.style.left = `${resizing.clientX - rect.left + wrapper.scrollLeft}px`;
+      guide.style.display = 'block';
+    } else {
+      guide.style.display = 'none';
+    }
+  }, [resizing]);
 
   return (
     <div
+      ref={wrapperRef}
       className={loading ? `${styles.wrapper} ${styles.loading}` : styles.wrapper}
       aria-busy={loading}
     >
+      <div ref={guideRef} className={styles.guide} aria-hidden="true" style={{ display: 'none' }} />
       <table className={styles.table}>
         <colgroup>
           {COLUMNS.map((col) => (
@@ -28,6 +46,7 @@ export function UsersTable({ users = [], sortBy = null, order = null, onSort = (
                 order={order}
                 onSort={onSort}
                 onResizeStart={startResize}
+                resizingKey={resizing?.key}
               />
             ))}
           </tr>
