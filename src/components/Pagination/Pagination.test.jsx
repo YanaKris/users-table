@@ -38,6 +38,13 @@ it('«Вперёд» переключает на следующую страни
   expect(onPageChange).toHaveBeenCalledWith(2);
 });
 
+it('«Назад» переключает на предыдущую страницу', async () => {
+  const onPageChange = vi.fn();
+  render(<Pagination page={2} totalPages={3} onPageChange={onPageChange} />);
+  await userEvent.click(screen.getByRole('button', { name: 'Назад' }));
+  expect(onPageChange).toHaveBeenCalledWith(1);
+});
+
 it('не рендерится, если страница всего одна', () => {
   const { container } = render(<Pagination page={1} totalPages={1} onPageChange={() => {}} />);
   expect(container).toBeEmptyDOMElement();
