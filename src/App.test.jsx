@@ -15,6 +15,7 @@ describe('App', () => {
     usersStore.page = 1;
     usersStore.total = 0;
     usersStore.search = '';
+    usersStore.selectedUser = null;
   });
   afterEach(() => vi.clearAllMocks());
 
@@ -107,5 +108,25 @@ describe('App', () => {
 
     await waitFor(() => expect(screen.getByRole('alert')).toBeInTheDocument(), { timeout: 2000 });
     expect(screen.getByRole('searchbox')).toHaveValue('xyz');
+  });
+
+  it('клик по строке открывает модалку с деталями пользователя', async () => {
+    getUsers.mockResolvedValue({
+      users: [{
+        id: 1, lastName: 'Johnson', firstName: 'Emily', age: 28,
+        height: 165, weight: 60, phone: '+81 965-431-3024',
+        email: 'emily@x.dummyjson.com', image: 'https://x/img.png',
+        address: { city: 'Phoenix', country: 'United States' },
+      }],
+      total: 1,
+    });
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
+
+    await userEvent.click(screen.getByText('Johnson'));
+
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveTextContent('Johnson Emily');
+    expect(dialog).toHaveTextContent('emily@x.dummyjson.com');
   });
 });
