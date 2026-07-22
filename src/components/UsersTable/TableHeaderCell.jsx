@@ -2,11 +2,25 @@ import { alignStyle } from '../../constants/columns';
 import { ORDER } from '../../constants/sort';
 import styles from './TableHeaderCell.module.css';
 
-export function TableHeaderCell({ column, sortBy, order, onSort }) {
+export function TableHeaderCell({ column, sortBy, order, onSort, onResizeStart }) {
   const style = alignStyle(column.align);
 
+  const resizer = onResizeStart ? (
+    <span
+      className={styles.resizer}
+      data-testid={`resizer-${column.key}`}
+      onMouseDown={(e) => onResizeStart(column.key, e)}
+      aria-hidden="true"
+    />
+  ) : null;
+
   if (!column.sortField) {
-    return <th style={style}>{column.label}</th>;
+    return (
+      <th style={style}>
+        {column.label}
+        {resizer}
+      </th>
+    );
   }
 
   const active = sortBy === column.sortField;
@@ -23,6 +37,7 @@ export function TableHeaderCell({ column, sortBy, order, onSort }) {
         <span>{column.label}</span>
         <span className={styles.arrow} aria-hidden="true">{arrow}</span>
       </button>
+      {resizer}
     </th>
   );
 }

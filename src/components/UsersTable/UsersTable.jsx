@@ -1,15 +1,23 @@
 import { COLUMNS } from '../../constants/columns';
+import { useColumnResize } from '../../hooks/useColumnResize';
 import { TableHeaderCell } from './TableHeaderCell';
 import { TableRow } from './TableRow';
 import styles from './UsersTable.module.css';
 
 export function UsersTable({ users = [], sortBy = null, order = null, onSort = () => {}, loading = false, onRowClick = () => {} }) {
+  const { widths, startResize } = useColumnResize(COLUMNS);
+
   return (
     <div
       className={loading ? `${styles.wrapper} ${styles.loading}` : styles.wrapper}
       aria-busy={loading}
     >
       <table className={styles.table}>
+        <colgroup>
+          {COLUMNS.map((col) => (
+            <col key={col.key} style={{ width: widths[col.key] }} />
+          ))}
+        </colgroup>
         <thead>
           <tr>
             {COLUMNS.map((col) => (
@@ -19,6 +27,7 @@ export function UsersTable({ users = [], sortBy = null, order = null, onSort = (
                 sortBy={sortBy}
                 order={order}
                 onSort={onSort}
+                onResizeStart={startResize}
               />
             ))}
           </tr>

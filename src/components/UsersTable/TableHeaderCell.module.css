@@ -15,3 +15,16 @@
   font-size: 11px;
   color: var(--color-text-muted);
 }
+.resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 6px;
+  height: 100%;
+  cursor: col-resize;
+  user-select: none;
+  z-index: 1;
+}
+.resizer:hover {
+  background: var(--color-border);
+}

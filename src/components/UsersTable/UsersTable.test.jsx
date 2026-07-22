@@ -103,8 +103,6 @@ describe('UsersTable', () => {
     const onRowClick = vi.fn();
     render(<UsersTable users={users} onRowClick={onRowClick} />);
     const cell = screen.getByText('Johnson');
-
-    // после drag-выделения браузер диспатчит click при ещё активном выделении
     const range = document.createRange();
     range.selectNodeContents(cell);
     window.getSelection().removeAllRanges();
@@ -114,5 +112,11 @@ describe('UsersTable', () => {
     expect(onRowClick).not.toHaveBeenCalled();
 
     window.getSelection().removeAllRanges();
+  });
+
+  it('рендерит ручки ресайза для колонок', () => {
+    render(<UsersTable users={users} />);
+    expect(screen.getByTestId('resizer-lastName')).toBeInTheDocument();
+    expect(screen.getByTestId('resizer-email')).toBeInTheDocument();
   });
 });
