@@ -1,7 +1,5 @@
 import styles from './Pagination.module.css';
 
-// Собирает элементы пагинации: первая, последняя, текущая ± сосед, между ними — «…».
-// Если пропущена ровно одна страница — показываем её номер вместо многоточия.
 function getPageItems(page, totalPages) {
   const delta = 1;
   const range = [];

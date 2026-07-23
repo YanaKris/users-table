@@ -3,7 +3,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/users-table/' : '/',
   plugins: [react()],
   test: {
     globals: true,
@@ -19,4 +20,4 @@ export default defineConfig({
       thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 },
     },
   },
-})
+}))
