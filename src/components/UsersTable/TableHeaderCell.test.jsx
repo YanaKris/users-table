@@ -19,7 +19,7 @@ function renderCell(column, props = {}) {
           />
         </tr>
       </thead>
-    </table>
+    </table>,
   );
 }
 

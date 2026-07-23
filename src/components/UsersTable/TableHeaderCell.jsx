@@ -32,13 +32,11 @@ export function TableHeaderCell({ column, sortBy, order, onSort, onResizeStart, 
 
   return (
     <th style={style} aria-sort={ariaSort}>
-      <button
-        type="button"
-        className={styles.sortButton}
-        onClick={() => onSort(column.sortField)}
-      >
+      <button type="button" className={styles.sortButton} onClick={() => onSort(column.sortField)}>
         <span>{column.label}</span>
-        <span className={styles.arrow} aria-hidden="true">{arrow}</span>
+        <span className={styles.arrow} aria-hidden="true">
+          {arrow}
+        </span>
       </button>
       {resizer}
     </th>

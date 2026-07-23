@@ -31,6 +31,10 @@
 }
 
 @media (max-width: 600px) {
-  .overlay { padding: 12px; }
-  .content { padding: 18px; }
+  .overlay {
+    padding: 12px;
+  }
+  .content {
+    padding: 18px;
+  }
 }

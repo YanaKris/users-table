@@ -60,7 +60,7 @@ it('Tab циклится внутри модалки и не уходит в ф�
       <Modal onClose={() => {}}>
         <button>внутри</button>
       </Modal>
-    </>
+    </>,
   );
   const outside = screen.getByRole('button', { name: 'снаружи' });
   const dialog = screen.getByRole('dialog');

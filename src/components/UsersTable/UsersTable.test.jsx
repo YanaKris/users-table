@@ -3,17 +3,26 @@ import userEvent from '@testing-library/user-event';
 import { UsersTable } from './UsersTable';
 import { COLUMNS } from '../../constants/columns';
 
-const users = [{
-  id: 1, lastName: 'Johnson', firstName: 'Emily', maidenName: 'Smith',
-  age: 29, gender: 'female', phone: '+81 965-431-3024',
-  email: 'emily@x.dummyjson.com', address: { country: 'United States', city: 'Phoenix' },
-}];
+const users = [
+  {
+    id: 1,
+    lastName: 'Johnson',
+    firstName: 'Emily',
+    maidenName: 'Smith',
+    age: 29,
+    gender: 'female',
+    phone: '+81 965-431-3024',
+    email: 'emily@x.dummyjson.com',
+    address: { country: 'United States', city: 'Phoenix' },
+  },
+];
 
 describe('UsersTable', () => {
   it('рендерит все заголовки колонок', () => {
     render(<UsersTable users={[]} />);
-    ['Фамилия','Имя','Отчество','Возраст','Пол','Телефон','Email','Страна','Город']
-      .forEach((l) => expect(screen.getByText(l)).toBeInTheDocument());
+    ['Фамилия', 'Имя', 'Отчество', 'Возраст', 'Пол', 'Телефон', 'Email', 'Страна', 'Город'].forEach(
+      (l) => expect(screen.getByText(l)).toBeInTheDocument(),
+    );
   });
 
   it('рендерит строку на пользователя с форматированными данными', () => {
@@ -68,8 +77,10 @@ describe('UsersTable', () => {
 
   it('пробрасывает sortBy/order в заголовки — активная колонка помечена aria-sort', () => {
     render(<UsersTable users={users} sortBy="age" order="asc" />);
-    expect(screen.getByRole('columnheader', { name: /Возраст/ }))
-      .toHaveAttribute('aria-sort', 'ascending');
+    expect(screen.getByRole('columnheader', { name: /Возраст/ })).toHaveAttribute(
+      'aria-sort',
+      'ascending',
+    );
   });
 
   it('без onSort клик по заголовку не роняет компонент', async () => {

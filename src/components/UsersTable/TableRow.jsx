@@ -15,12 +15,7 @@ export function TableRow({ user, onRowClick = () => {} }) {
   };
 
   return (
-    <tr
-      tabIndex={0}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      style={{ cursor: 'pointer' }}
-    >
+    <tr tabIndex={0} onClick={handleClick} onKeyDown={handleKeyDown} style={{ cursor: 'pointer' }}>
       {COLUMNS.map((col) => (
         <td key={col.key} style={alignStyle(col.align)}>
           {formatValue(col.getValue(user))}

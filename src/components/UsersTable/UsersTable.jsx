@@ -5,7 +5,14 @@ import { TableHeaderCell } from './TableHeaderCell';
 import { TableRow } from './TableRow';
 import styles from './UsersTable.module.css';
 
-export function UsersTable({ users = [], sortBy = null, order = null, onSort = () => {}, loading = false, onRowClick = () => {} }) {
+export function UsersTable({
+  users = [],
+  sortBy = null,
+  order = null,
+  onSort = () => {},
+  loading = false,
+  onRowClick = () => {},
+}) {
   const { widths, startResize, resizing } = useColumnResize(COLUMNS);
   const wrapperRef = useRef(null);
   const guideRef = useRef(null);
@@ -55,7 +62,9 @@ export function UsersTable({ users = [], sortBy = null, order = null, onSort = (
         <tbody>
           {users.length === 0 ? (
             <tr>
-              <td className={styles.empty} colSpan={COLUMNS.length}>Ничего не найдено</td>
+              <td className={styles.empty} colSpan={COLUMNS.length}>
+                Ничего не найдено
+              </td>
             </tr>
           ) : (
             users.map((user) => <TableRow key={user.id} user={user} onRowClick={onRowClick} />)

@@ -80,7 +80,7 @@ describe('сортировка', () => {
     await store.load();
 
     expect(getUsers).toHaveBeenCalledWith(
-      expect.objectContaining({ sortBy: 'age', order: 'desc' })
+      expect.objectContaining({ sortBy: 'age', order: 'desc' }),
     );
   });
 });
@@ -107,10 +107,10 @@ describe('isInitialLoading', () => {
 describe('защита от гонки', () => {
   it('поздний ответ не затирает результат более свежего запроса', async () => {
     let resolveSlow;
-    const slow = new Promise((resolve) => { resolveSlow = resolve; });
-    getUsers
-      .mockReturnValueOnce(slow)
-      .mockResolvedValueOnce({ users: [{ id: 2 }], total: 2 });
+    const slow = new Promise((resolve) => {
+      resolveSlow = resolve;
+    });
+    getUsers.mockReturnValueOnce(slow).mockResolvedValueOnce({ users: [{ id: 2 }], total: 2 });
 
     const store = new UsersStore();
 
@@ -126,10 +126,10 @@ describe('защита от гонки', () => {
 
   it('поздняя ОШИБКА не затирает результат более свежего успешного запроса', async () => {
     let rejectSlow;
-    const slow = new Promise((_, reject) => { rejectSlow = reject; });
-    getUsers
-      .mockReturnValueOnce(slow)
-      .mockResolvedValueOnce({ users: [{ id: 2 }], total: 2 });
+    const slow = new Promise((_, reject) => {
+      rejectSlow = reject;
+    });
+    getUsers.mockReturnValueOnce(slow).mockResolvedValueOnce({ users: [{ id: 2 }], total: 2 });
 
     const store = new UsersStore();
 
