@@ -5,6 +5,8 @@
   max-height: 70vh;
   overflow: auto;
   position: relative;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 .loading {
   opacity: 0.55;
@@ -56,4 +58,9 @@
   background: #6582c1;
   pointer-events: none;
   z-index: 5;
+}
+
+@media (max-width: 600px) {
+  .table { font-size: 13px; }
+  .table th, .table td { padding: 8px 10px; }
 }
