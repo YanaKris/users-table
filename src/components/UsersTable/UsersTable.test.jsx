@@ -35,10 +35,10 @@ describe('UsersTable', () => {
     expect(screen.getByText('Ничего не найдено')).toBeInTheDocument();
   });
 
-  it('числовую колонку «Возраст» выравнивает вправо', () => {
+  it('числовую колонку «Возраст» выравнивает по центру', () => {
     render(<UsersTable users={users} />);
     const rows = screen.getAllByRole('row');
-    expect(within(rows[1]).getByText('29')).toHaveStyle({ textAlign: 'right' });
+    expect(within(rows[1]).getByText('29')).toHaveStyle({ textAlign: 'center' });
   });
 
   it('клик по сортируемому заголовку вызывает onSort с полем', async () => {
