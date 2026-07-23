@@ -25,6 +25,7 @@
   cursor: col-resize;
   opacity: 0;
   transition: opacity .15s;
+  z-index: 1;
 }
 
 th:hover .resizer {

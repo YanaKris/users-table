@@ -10,3 +10,7 @@
   border-radius: 6px;
   font-size: 14px;
 }
+
+@media (max-width: 600px) {
+  .input { max-width: none; }
+}

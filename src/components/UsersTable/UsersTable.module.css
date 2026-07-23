@@ -5,6 +5,8 @@
   max-height: 70vh;
   overflow: auto;
   position: relative;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 .loading {
   opacity: 0.55;
@@ -35,7 +37,17 @@
 
 .table th {
   position: relative;
-  border-right: 1px solid var(--color-border);
+}
+.table th:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 60%;
+  background: var(--color-header-divider);
+  pointer-events: none;
 }
 
 .guide {
@@ -46,4 +58,9 @@
   background: #6582c1;
   pointer-events: none;
   z-index: 5;
+}
+
+@media (max-width: 600px) {
+  .table { font-size: 13px; }
+  .table th, .table td { padding: 8px 10px; }
 }

@@ -49,3 +49,20 @@ it('не рендерится, если страница всего одна', (
   const { container } = render(<Pagination page={1} totalPages={1} onPageChange={() => {}} />);
   expect(container).toBeEmptyDOMElement();
 });
+
+it('при большом числе страниц показывает многоточие', () => {
+  render(<Pagination page={5} totalPages={20} onPageChange={() => {}} />);
+  expect(screen.getAllByText('…').length).toBeGreaterThan(0);
+});
+
+it('показывает первую, последнюю, текущую и соседние страницы', () => {
+  render(<Pagination page={5} totalPages={20} onPageChange={() => {}} />);
+  ['1', '4', '5', '6', '20'].forEach((n) =>
+    expect(screen.getByRole('button', { name: n })).toBeInTheDocument()
+  );
+});
+
+it('не показывает многоточие при малом числе страниц', () => {
+  render(<Pagination page={2} totalPages={5} onPageChange={() => {}} />);
+  expect(screen.queryByText('…')).toBeNull();
+});

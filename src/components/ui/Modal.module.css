@@ -29,3 +29,8 @@
   cursor: pointer;
   color: var(--color-text-muted);
 }
+
+@media (max-width: 600px) {
+  .overlay { padding: 12px; }
+  .content { padding: 18px; }
+}
