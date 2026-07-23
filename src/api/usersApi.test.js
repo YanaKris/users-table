@@ -8,8 +8,8 @@ function mockFetch(data, { ok = true, status = 200 } = {}) {
         ok,
         status,
         json: () => Promise.resolve(data),
-      })
-    )
+      }),
+    ),
   );
 }
 
@@ -79,7 +79,10 @@ describe('usersApi', () => {
     });
 
     it('бросает ошибку при сетевом сбое (fetch отклонён)', async () => {
-      vi.stubGlobal('fetch', vi.fn(() => Promise.reject(new TypeError('Failed to fetch'))));
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(() => Promise.reject(new TypeError('Failed to fetch'))),
+      );
 
       await expect(getUsers({ limit: 1, skip: 0 })).rejects.toThrow('Ошибка сети');
     });

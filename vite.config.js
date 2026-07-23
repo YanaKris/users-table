@@ -1,6 +1,6 @@
 /// <reference types="vitest/config" />
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
@@ -20,4 +20,4 @@ export default defineConfig(({ command }) => ({
       thresholds: { statements: 80, branches: 80, functions: 80, lines: 80 },
     },
   },
-}))
+}));

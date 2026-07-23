@@ -12,5 +12,7 @@
 }
 
 @media (max-width: 600px) {
-  .input { max-width: none; }
+  .input {
+    max-width: none;
+  }
 }

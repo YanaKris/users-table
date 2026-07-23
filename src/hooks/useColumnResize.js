@@ -4,7 +4,7 @@ const MIN_WIDTH = 50;
 
 export function useColumnResize(columns, defaultWidth = 150) {
   const [widths, setWidths] = useState(() =>
-    Object.fromEntries(columns.map((c) => [c.key, c.width ?? defaultWidth]))
+    Object.fromEntries(columns.map((c) => [c.key, c.width ?? defaultWidth])),
   );
   const [resizing, setResizing] = useState(null);
 
@@ -17,7 +17,11 @@ export function useColumnResize(columns, defaultWidth = 150) {
   const startResize = useCallback((key, event) => {
     if (event.button !== 0) return;
     event.preventDefault();
-    dragRef.current = { key, startX: event.clientX, startWidth: widthsRef.current[key] ?? MIN_WIDTH };
+    dragRef.current = {
+      key,
+      startX: event.clientX,
+      startWidth: widthsRef.current[key] ?? MIN_WIDTH,
+    };
     setResizing({ key, clientX: event.clientX });
   }, []);
 

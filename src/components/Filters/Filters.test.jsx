@@ -9,6 +9,11 @@ it('рендерит поле поиска', () => {
   expect(screen.getByRole('searchbox')).toBeInTheDocument();
 });
 
+it('ограничивает длину ввода атрибутом maxLength', () => {
+  render(<Filters onSearch={() => {}} />);
+  expect(screen.getByRole('searchbox')).toHaveAttribute('maxlength', '50');
+});
+
 it('не вызывает onSearch при монтировании', () => {
   const onSearch = vi.fn();
   render(<Filters onSearch={onSearch} />);

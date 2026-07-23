@@ -71,17 +71,12 @@ export function Modal({ onClose, children }) {
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          type="button"
-          className={styles.close}
-          onClick={onClose}
-          aria-label="Закрыть"
-        >
+        <button type="button" className={styles.close} onClick={onClose} aria-label="Закрыть">
           ×
         </button>
         {children}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 }

@@ -16,7 +16,8 @@ const App = observer(function App() {
 
   const handleSearch = useCallback((query) => usersStore.setSearch(query), []);
 
-  const { users, loading, error, sortBy, order, page, totalPages, isInitialLoading, selectedUser } = usersStore;
+  const { users, loading, error, sortBy, order, page, totalPages, isInitialLoading, selectedUser } =
+    usersStore;
 
   return (
     <div className="app">

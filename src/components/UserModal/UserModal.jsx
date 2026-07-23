@@ -17,12 +17,30 @@ export function UserModal({ user, onClose }) {
         <h2 className={styles.name}>{fullName}</h2>
       </div>
       <dl className={styles.details}>
-        <div className={styles.row}><dt>Возраст</dt><dd>{user.age}</dd></div>
-        <div className={styles.row}><dt>Адрес</dt><dd>{addressText}</dd></div>
-        <div className={styles.row}><dt>Рост</dt><dd>{user.height} см</dd></div>
-        <div className={styles.row}><dt>Вес</dt><dd>{user.weight} кг</dd></div>
-        <div className={styles.row}><dt>Телефон</dt><dd>{user.phone}</dd></div>
-        <div className={styles.row}><dt>Email</dt><dd>{user.email}</dd></div>
+        <div className={styles.row}>
+          <dt>Возраст</dt>
+          <dd>{user.age}</dd>
+        </div>
+        <div className={styles.row}>
+          <dt>Адрес</dt>
+          <dd>{addressText}</dd>
+        </div>
+        <div className={styles.row}>
+          <dt>Рост</dt>
+          <dd>{user.height} см</dd>
+        </div>
+        <div className={styles.row}>
+          <dt>Вес</dt>
+          <dd>{user.weight} кг</dd>
+        </div>
+        <div className={styles.row}>
+          <dt>Телефон</dt>
+          <dd>{user.phone}</dd>
+        </div>
+        <div className={styles.row}>
+          <dt>Email</dt>
+          <dd>{user.email}</dd>
+        </div>
       </dl>
     </Modal>
   );

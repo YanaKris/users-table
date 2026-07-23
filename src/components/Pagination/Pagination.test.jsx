@@ -58,7 +58,7 @@ it('при большом числе страниц показывает мно�
 it('показывает первую, последнюю, текущую и соседние страницы', () => {
   render(<Pagination page={5} totalPages={20} onPageChange={() => {}} />);
   ['1', '4', '5', '6', '20'].forEach((n) =>
-    expect(screen.getByRole('button', { name: n })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: n })).toBeInTheDocument(),
   );
 });
 

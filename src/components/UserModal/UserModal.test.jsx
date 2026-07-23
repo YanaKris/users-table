@@ -12,7 +12,12 @@ const user = {
   phone: '+81 965-431-3024',
   email: 'emily@x.dummyjson.com',
   image: 'https://dummyjson.com/icon/emilys/128',
-  address: { address: '626 Main St', city: 'Phoenix', state: 'Mississippi', country: 'United States' },
+  address: {
+    address: '626 Main St',
+    city: 'Phoenix',
+    state: 'Mississippi',
+    country: 'United States',
+  },
 };
 
 it('ничего не рендерит без пользователя', () => {

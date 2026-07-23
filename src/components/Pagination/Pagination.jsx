@@ -30,17 +30,15 @@ export function Pagination({ page, totalPages, onPageChange }) {
 
   return (
     <nav className={styles.pagination} aria-label="Пагинация">
-      <button
-        type="button"
-        onClick={() => onPageChange(page - 1)}
-        disabled={page === 1}
-      >
+      <button type="button" onClick={() => onPageChange(page - 1)} disabled={page === 1}>
         Назад
       </button>
 
       {items.map((item, index) =>
         item === '…' ? (
-          <span key={`dots-${index}`} className={styles.dots} aria-hidden="true">…</span>
+          <span key={`dots-${index}`} className={styles.dots} aria-hidden="true">
+            …
+          </span>
         ) : (
           <button
             key={item}
@@ -51,14 +49,10 @@ export function Pagination({ page, totalPages, onPageChange }) {
           >
             {item}
           </button>
-        )
+        ),
       )}
 
-      <button
-        type="button"
-        onClick={() => onPageChange(page + 1)}
-        disabled={page === totalPages}
-      >
+      <button type="button" onClick={() => onPageChange(page + 1)} disabled={page === totalPages}>
         Вперёд
       </button>
     </nav>
