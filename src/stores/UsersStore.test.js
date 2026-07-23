@@ -86,20 +86,37 @@ describe('сортировка', () => {
 });
 
 describe('isInitialLoading', () => {
-  it('true при первой загрузке, когда данных ещё нет', () => {
+  it('true при первой загрузке, пока она не завершилась', () => {
     const store = new UsersStore();
     expect(store.isInitialLoading).toBe(true);
   });
 
-  it('false при пересортировке — загрузка идёт, но данные уже есть', () => {
+  it('false при повторной загрузке — первая уже завершилась', () => {
     const store = new UsersStore();
-    store.users = [{ id: 1 }];
+    store.initialized = true;
     expect(store.isInitialLoading).toBe(false);
   });
 
   it('false, когда загрузка завершена', () => {
     const store = new UsersStore();
     store.loading = false;
+    expect(store.isInitialLoading).toBe(false);
+  });
+
+  it('первый load помечает стор как initialized', async () => {
+    getUsers.mockResolvedValue({ users: [], total: 0 });
+    const store = new UsersStore();
+    await store.load();
+    expect(store.initialized).toBe(true);
+  });
+
+  it('остаётся false при загрузке после пустого результата (баг: поле поиска не должно пропадать)', async () => {
+    getUsers.mockResolvedValue({ users: [], total: 0 });
+    const store = new UsersStore();
+    await store.load();
+
+    store.loading = true;
+    expect(store.users).toEqual([]);
     expect(store.isInitialLoading).toBe(false);
   });
 });

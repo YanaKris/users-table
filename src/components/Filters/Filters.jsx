@@ -6,6 +6,7 @@ export function Filters({ onSearch, delay = 300 }) {
   const [value, setValue] = useState('');
   const debounced = useDebounce(value, delay);
   const isFirst = useRef(true);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     if (isFirst.current) {
@@ -15,17 +16,35 @@ export function Filters({ onSearch, delay = 300 }) {
     onSearch(debounced);
   }, [debounced, onSearch]);
 
+  const handleClear = () => {
+    setValue('');
+    inputRef.current?.focus();
+  };
+
   return (
     <div className={styles.filters}>
-      <input
-        type="search"
-        className={styles.input}
-        placeholder="Поиск по пользователям…"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        maxLength={50}
-        aria-label="Поиск"
-      />
+      <div className={styles.field}>
+        <input
+          ref={inputRef}
+          type="search"
+          className={styles.input}
+          placeholder="Поиск по пользователям…"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          maxLength={50}
+          aria-label="Поиск"
+        />
+        {value && (
+          <button
+            type="button"
+            className={styles.clear}
+            onClick={handleClear}
+            aria-label="Очистить поиск"
+          >
+            ×
+          </button>
+        )}
+      </div>
     </div>
   );
 }
