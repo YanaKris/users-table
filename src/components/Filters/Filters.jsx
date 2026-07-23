@@ -23,6 +23,7 @@ export function Filters({ onSearch, delay = 300 }) {
         placeholder="Поиск по пользователям…"
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        maxLength={50}
         aria-label="Поиск"
       />
     </div>
