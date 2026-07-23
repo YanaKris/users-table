@@ -84,4 +84,33 @@ describe('usersApi', () => {
       await expect(getUsers({ limit: 1, skip: 0 })).rejects.toThrow('Ошибка сети');
     });
   });
+
+  describe('базовый URL из окружения (VITE_API_URL)', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+      vi.resetModules();
+    });
+
+    it('использует VITE_API_URL, если переменная задана', async () => {
+      vi.stubEnv('VITE_API_URL', 'https://api.example.test');
+      vi.resetModules();
+      mockFetch({ users: [], total: 0 });
+
+      const { getUsers: getUsersEnv } = await import('./usersApi');
+      await getUsersEnv({ limit: 1, skip: 0 });
+
+      expect(fetch.mock.calls[0][0]).toContain('https://api.example.test/users?');
+    });
+
+    it('откатывается на https://dummyjson.com, если VITE_API_URL не задан', async () => {
+      vi.stubEnv('VITE_API_URL', undefined);
+      vi.resetModules();
+      mockFetch({ users: [], total: 0 });
+
+      const { getUsers: getUsersDefault } = await import('./usersApi');
+      await getUsersDefault({ limit: 1, skip: 0 });
+
+      expect(fetch.mock.calls[0][0]).toContain('https://dummyjson.com/users?');
+    });
+  });
 });
