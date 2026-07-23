@@ -43,3 +43,42 @@ it('быстрый ввод даёт один вызов с финальным �
   expect(onSearch).toHaveBeenCalledTimes(1);
   expect(onSearch).toHaveBeenCalledWith('john');
 });
+
+describe('кнопка очистки', () => {
+  it('не отображается, пока поле пустое', () => {
+    render(<Filters onSearch={() => {}} />);
+    expect(screen.queryByRole('button', { name: 'Очистить поиск' })).toBeNull();
+  });
+
+  it('появляется после ввода текста', () => {
+    render(<Filters onSearch={() => {}} />);
+    fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'john' } });
+    expect(screen.getByRole('button', { name: 'Очистить поиск' })).toBeInTheDocument();
+  });
+
+  it('клик очищает поле и снова прячет кнопку', () => {
+    render(<Filters onSearch={() => {}} />);
+    const input = screen.getByRole('searchbox');
+    fireEvent.change(input, { target: { value: 'john' } });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Очистить поиск' }));
+
+    expect(input).toHaveValue('');
+    expect(screen.queryByRole('button', { name: 'Очистить поиск' })).toBeNull();
+  });
+
+  it('очистка вызывает onSearch с пустой строкой после задержки', () => {
+    const onSearch = vi.fn();
+    render(<Filters onSearch={onSearch} />);
+    const input = screen.getByRole('searchbox');
+
+    fireEvent.change(input, { target: { value: 'john' } });
+    act(() => vi.advanceTimersByTime(300));
+    onSearch.mockClear();
+
+    fireEvent.click(screen.getByRole('button', { name: 'Очистить поиск' }));
+    act(() => vi.advanceTimersByTime(300));
+
+    expect(onSearch).toHaveBeenCalledWith('');
+  });
+});

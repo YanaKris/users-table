@@ -6,6 +6,7 @@ export class UsersStore {
   users = [];
   total = 0;
   loading = true;
+  initialized = false;
   error = null;
   limit = 30;
   page = 1;
@@ -20,7 +21,7 @@ export class UsersStore {
   }
 
   get isInitialLoading() {
-    return this.loading && this.users.length === 0;
+    return this.loading && !this.initialized;
   }
 
   get skip() {
@@ -61,6 +62,7 @@ export class UsersStore {
       if (requestId === this.lastRequestId) {
         runInAction(() => {
           this.loading = false;
+          this.initialized = true;
         });
       }
     }

@@ -114,6 +114,30 @@ describe('App', () => {
     expect(screen.getByRole('searchbox')).toHaveValue('xyz');
   });
 
+  it('поиск без результатов не очищает поле при продолжении ввода', async () => {
+    getUsers.mockResolvedValue({
+      users: [{ id: 1, lastName: 'Johnson', firstName: 'Emily', address: { city: 'Phoenix' } }],
+      total: 1,
+    });
+    searchUsers.mockResolvedValue({ users: [], total: 0 });
+
+    render(<App />);
+    await waitFor(() => expect(screen.getByText('Johnson')).toBeInTheDocument());
+
+    await userEvent.type(screen.getByRole('searchbox'), 'zzz');
+    await waitFor(() => expect(screen.getByText('Ничего не найдено')).toBeInTheDocument(), {
+      timeout: 2000,
+    });
+    expect(screen.getByRole('searchbox')).toHaveValue('zzz');
+
+    await userEvent.type(screen.getByRole('searchbox'), 'q');
+    await waitFor(
+      () => expect(searchUsers).toHaveBeenLastCalledWith(expect.objectContaining({ q: 'zzzq' })),
+      { timeout: 2000 },
+    );
+    expect(screen.getByRole('searchbox')).toHaveValue('zzzq');
+  });
+
   it('клик по строке открывает модалку с деталями пользователя', async () => {
     getUsers.mockResolvedValue({
       users: [
