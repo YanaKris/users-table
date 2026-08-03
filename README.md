@@ -1,5 +1,10 @@
 # Таблица пользователей
 
+[![Deploy](https://github.com/YanaKris/users-table/actions/workflows/deploy.yml/badge.svg)](https://github.com/YanaKris/users-table/actions/workflows/deploy.yml)
+[![CI](https://github.com/YanaKris/users-table/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/YanaKris/users-table/actions/workflows/ci.yml)
+
+**Демо:** https://yanakris.github.io/users-table/
+
 Тестовое задание: одностраничное приложение на React, отображающее таблицу
 пользователей из [DummyJSON API](https://dummyjson.com/docs/users) с сортировкой,
 фильтрацией, пагинацией, модальным окном и изменением ширины колонок.
