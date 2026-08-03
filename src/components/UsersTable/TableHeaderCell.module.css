@@ -1,0 +1,41 @@
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
+}
+.arrow {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 1;
+}
+
+th:hover .resizer {
+  opacity: 1;
+  background: var(--color-border);
+}
+.resizer:hover {
+  background: var(--color-text-muted);
+}
+.resizer.dragging {
+  opacity: 1;
+  background: #2563eb;
+}
